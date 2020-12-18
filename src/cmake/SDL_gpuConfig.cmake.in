@@ -1,0 +1,32 @@
+get_filename_component(SDL_GPU_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if( USE_SDL1 )
+    find_dependency(SDL REQUIRED)
+else()
+    find_dependency(SDL2 REQUIRED)
+endif()
+
+if( NOT DISABLE_OPENGL )
+    find_dependency(OpenGL REQUIRED)
+endif()
+
+
+if( NOT DISABLE_GLES AND NOT ANDROID)
+    find_dependency(OpenGLES REQUIRED)
+endif()
+
+if ( BUILD_DOCS )
+    find_dependency(Doxygen)
+endif()
+
+if ( BUILD_TESTS AND BUILD_VIDEO_TEST )
+    find_dependency(FFMPEG REQUIRED)
+endif()
+
+
+if(NOT TARGET SDL_gpu::SDL_gpu)
+    include("${SDL_GPU_CMAKE_DIR}/SDL_gpuTargets.cmake")
+endif()
+
+set(SDL_GPU_LIBRARIES SDL_gpu::SDL_gpu)

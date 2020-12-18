@@ -123,9 +123,9 @@ if(BUILD_SHARED)
 	target_link_libraries(SDL_gpu_shared ${GL_LIBRARIES})
 
 	if(BUILD_FRAMEWORK)
-        if(NOT CMAKE_VERSION VERSION_LESS "3.1")
-            set_property(TARGET SDL_gpu_shared PROPERTY C_STANDARD 99)
-        endif()
+	if(NOT CMAKE_VERSION VERSION_LESS "3.1")
+	    set_property(TARGET SDL_gpu_shared PROPERTY C_STANDARD 99)
+	endif()
 		set_target_properties(SDL_gpu_shared PROPERTIES
 			FRAMEWORK TRUE
 			FRAMEWORK_VERSION "A"
@@ -181,7 +181,7 @@ if(BUILD_STATIC)
 		${SDL_gpu_SRCS}
 	)
     if(NOT CMAKE_VERSION VERSION_LESS "3.1")
-        set_property(TARGET SDL_gpu PROPERTY C_STANDARD 99)
+	set_property(TARGET SDL_gpu PROPERTY C_STANDARD 99)
     endif()
 	set_target_properties(SDL_gpu PROPERTIES
 		OUTPUT_NAME ${STATIC_OUTPUT}
@@ -201,6 +201,11 @@ endif()
 source_group(Common FILES ${SDL_gpu_SRCS} ${SDL_gpu_HDRS})
 
 # Install the headers and library
+
+# Provides ${CMAKE_INSTALL_LIBDIR}
+include(GNUInstallDirs)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/SDL_gpu)
+
 if(INSTALL_LIBRARY)
 	if(USE_SDL1)
 		install(FILES ${SDL_gpu_public_HDRS} DESTINATION include/SDL)
@@ -208,11 +213,53 @@ if(INSTALL_LIBRARY)
 		install(FILES ${SDL_gpu_public_HDRS} DESTINATION include/SDL2)
 	endif(USE_SDL1)
 
-	if(BUILD_SHARED)
-		install(TARGETS SDL_gpu_shared EXPORT SDL_gpu-targets DESTINATION lib)
-	endif()
-	if(BUILD_STATIC)
-		install(TARGETS SDL_gpu EXPORT SDL_gpu-targets DESTINATION lib)
+	if(BUILD_SHARED OR BUILD_STATIC)
+		if(BUILD_SHARED)
+			install(TARGETS SDL_gpu_shared
+			EXPORT SDL_gpu-targets
+			LIBRARY DESTINATION lib
+			ARCHIVE DESTINATION lib
+			RUNTIME DESTINATION bin
+			FRAMEWORK DESTINATION lib
+			INCLUDES DESTINATION include
+			)
+		endif()
+		if(BUILD_STATIC)
+			install(TARGETS SDL_gpu
+			EXPORT SDL_gpu-targets
+			LIBRARY DESTINATION lib
+			ARCHIVE DESTINATION lib
+			RUNTIME DESTINATION bin
+			INCLUDES DESTINATION include
+			)
+		endif()
+
+
+		install(EXPORT SDL_gpu-targets
+			FILE
+			SDL_gpuTargets.cmake
+			NAMESPACE
+			SDL_gpu::
+			DESTINATION
+			${INSTALL_CONFIGDIR}
+			)
+
+		include(CMakePackageConfigHelpers)
+		configure_package_config_file(
+			${CMAKE_CURRENT_LIST_DIR}/cmake/SDL_gpuConfig.cmake.in
+			${CMAKE_CURRENT_BINARY_DIR}/SDL_gpuConfig.cmake
+			INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+			)
+
+		# Install the config
+		install(
+			FILES
+			${CMAKE_CURRENT_BINARY_DIR}/SDL_gpuConfig.cmake
+			DESTINATION
+			${INSTALL_CONFIGDIR}
+			)
+
 	endif()
 
 endif(INSTALL_LIBRARY)
+
