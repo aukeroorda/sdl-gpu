@@ -1,6 +1,8 @@
 get_filename_component(SDL_GPU_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 include(CMakeFindDependencyMacro)
 
+message(STATUS "SDL_gpuConfig.cmake file: USE_SDL = ${USE_SDL}, DISABLE_OPENGL = ${DISABLE_OPENGL}, DISABLE_GLES = ${DISABLE_GLES}")
+
 if( USE_SDL1 )
     find_dependency(SDL REQUIRED)
 else()
