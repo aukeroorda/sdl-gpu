@@ -3,28 +3,28 @@ include(CMakeFindDependencyMacro)
 
 message(STATUS "SDL_gpuConfig.cmake file: USE_SDL = ${USE_SDL}, DISABLE_OPENGL = ${DISABLE_OPENGL}, DISABLE_GLES = ${DISABLE_GLES}")
 
-if( USE_SDL1 )
-    find_dependency(SDL REQUIRED)
-else()
-    find_dependency(SDL2 REQUIRED)
-endif()
+#if( USE_SDL1 )
+#    find_dependency(SDL REQUIRED)
+#else()
+#    find_dependency(SDL2 REQUIRED)
+#endif()
 
-if( NOT DISABLE_OPENGL )
-    find_dependency(OpenGL REQUIRED)
-endif()
+#if( NOT DISABLE_OPENGL )
+#    find_dependency(OpenGL REQUIRED)
+#endif()
 
 
-if( NOT DISABLE_GLES AND NOT ANDROID)
-    find_dependency(OpenGLES REQUIRED)
-endif()
+#if( NOT DISABLE_GLES AND NOT ANDROID)
+#    find_dependency(OpenGLES REQUIRED)
+#endif()
 
-if ( BUILD_DOCS )
-    find_dependency(Doxygen)
-endif()
+#if ( BUILD_DOCS )
+#    find_dependency(Doxygen)
+#endif()
 
-if ( BUILD_TESTS AND BUILD_VIDEO_TEST )
-    find_dependency(FFMPEG REQUIRED)
-endif()
+#if ( BUILD_TESTS AND BUILD_VIDEO_TEST )
+#    find_dependency(FFMPEG REQUIRED)
+#endif()
 
 
 if(NOT TARGET SDL_gpu::SDL_gpu)
